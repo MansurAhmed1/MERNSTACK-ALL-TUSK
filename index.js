@@ -140,7 +140,7 @@ async function run() {
     navigate(from, { replace: true });
 
 ///////////////for auth and jwt for login fontend//////////////
-///////////////for auth and jwt for login backend//////////////
+///////////////////////////////for auth and jwt for login backend///////////////////////
     app.post("/login", async (req, res) => {
       const user = req.body;
       //emailke object er moto die dite hobe
@@ -151,15 +151,13 @@ async function run() {
       res.send({ accessToken });
       console.log(accessToken);
     });
-///////////////for auth and jwt for login backend//////////////
+///////////////////////////////for auth and jwt for login backend///////////////////////
 
 
 
 
 
-//////////////////////////pagination backend/////////////////////////////////////////
-
-
+//////////////////////////pagination fontend/////////////////////////////////////////
   //pagecount mane kotota page/button hobe
   const [pageCount, setPageCount] = useState(0);
   //page mane koto number button/page a click korsi
@@ -210,7 +208,7 @@ useEffect(() => {
 ///////////////////////////////page button/////////////////////////
 
 
-//////////////////////////pagination backend/////////////////////////////////////////
+//////////////////////////pagination fontend//////////////////////////////////////////////
 //////////////////////////pagination backend/////////////////////////////////////////
     //backend er datake ui te pathanor jonno nicher re.send app.get er moddho
     app.get("/book", async (req, res) => {
