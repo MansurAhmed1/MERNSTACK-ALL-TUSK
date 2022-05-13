@@ -1,24 +1,65 @@
+////////////////framework/////////////////
 /** @format */
 
-// for client side
+const express = require("express");
+const cors = require("cors");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+// var MongoClient = require('mongodb').MongoClient;
+const jwt = require("jsonwebtoken");
+// var MongoClient = require('mongodb').MongoClient;
+require("dotenv").config();
+const port = process.env.PORT || 5000;
+const app = express();
 
-/* 
-1.log in components er moddho handlesighn in button er moddho nicher eita bosate hobe
+// use middleware
+app.use(cors());
+app.use(express.json());
 
-    const { data } = await axios.post(
-      "https://assighment11.herokuapp.com/login",
-      { email }
-    );
- 
-    localStorage.setItem("accessToken", data.accessToken);
-    navigate(from, { replace: true });
+function varifyJWT(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).send({ message: "unauthorized access" });
+  }
+  const token = authHeader.split(" ")[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).send({ message: "Forbidden access" });
+    }
+    console.log("decoded", decoded);
+    req.decoded = decoded;
+    next();
+  });
+}
 
+var uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-shard-00-00.v85be.mongodb.net:27017,cluster0-shard-00-01.v85be.mongodb.net:27017,cluster0-shard-00-02.v85be.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-e24feo-shard-0&authSource=admin&retryWrites=true&w=majority`;
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1
+});
 
+async function run() {
+  try {
+    await client.connect();
+    const productCollection = client
+      //database name bosate hobe
+      .db("BookHouseSimple")
+      //collection name bosate hobe
+      .collection("books");
 
+    
+  } finally {
+  }
+}
+run().catch(console.dir);
 
-*/
+app.get("/", (req, res) => {
+  res.send("running jenius server");
+});
 
-
+app.listen(port, () => {
+  console.log("listening to port variable");
+});
 
 
 
@@ -77,10 +118,15 @@ async function run() {
       //collection name bosate hobe
       .collection("books");
 
-    //for bookreqest collection
+/////////////////////////collection toiri kora///////////////  
     const requestCollection = client
+    //datatbase name thik rakhte hobe
       .db("BookHouseSimple")
+      //collection name alada bosate hobe
       .collection("request");
+/////////////////////////collection toiri kora///////////////  
+
+
 
 
 ///////////////for auth and jwt for login fontend//////////////
@@ -94,9 +140,6 @@ async function run() {
     navigate(from, { replace: true });
 
 ///////////////for auth and jwt for login fontend//////////////
-
-
-
 ///////////////for auth and jwt for login backend//////////////
     app.post("/login", async (req, res) => {
       const user = req.body;
